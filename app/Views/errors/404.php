@@ -21,8 +21,10 @@
                         <p class="text-muted mb-4">
                             Maaf, halaman yang Anda cari tidak tersedia atau telah dipindahkan.
                         </p>
-                        <a href="<?= base_url() ?>" class="btn btn-primary px-4">
-                            Kembali ke Beranda
+                        <a href="<?= base_url(
+                                        session()->get('role') == 'admin' ? 'admin/dashboard' : (session()->get('role') == 'krew' ? 'krew/dashboard' : (session()->get('role') == 'pelanggan' ? 'pelanggan/dashboard' : ''))
+                                    ) ?>" class="btn btn-primary px-4">
+                            Kembali ke Dashboard
                         </a>
                     </div>
                 </div>
