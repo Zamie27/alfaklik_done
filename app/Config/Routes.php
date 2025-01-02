@@ -29,6 +29,20 @@ $routes->get('logout', 'Auth::logout');
 // Route untuk Admin
 $routes->group('admin', ['filter' => 'auth:admin'], function ($routes) {
     $routes->get('dashboard', 'Admin\Dashboard::index');
+    // sistem CRUD barang
+    $routes->get('dashboard/barang', 'Admin\Dashboard::indexBarang');
+    $routes->get('dashboard/create-barang', 'Admin\Dashboard::createBarang');
+    $routes->post('dashboard/store-barang', 'Admin\Dashboard::storeBarang');
+    $routes->get('dashboard/edit-barang/(:num)', 'Admin\Dashboard::editBarang/$1');
+    $routes->post('dashboard/update-barang/(:num)', 'Admin\Dashboard::updateBarang/$1');
+    $routes->get('dashboard/delete-barang/(:num)', 'Admin\Dashboard::deleteBarang/$1');
+    // sistem CRUD Akun
+    $routes->get('dashboard/akun', 'Admin\Dashboard::indexAkun');
+    $routes->get('dashboard/akun/createAkun', 'Admin\Dashboard::createAkun');
+    $routes->post('dashboard/akun/storeAkun', 'Admin\Dashboard::storeAkun');
+    $routes->get('dashboard/akun/editAkun/(:num)', 'Admin\Dashboard::editAkun/$1');
+    $routes->post('dashboard/akun/updateAkun/(:num)', 'Admin\Dashboard::updateAkun/$1');
+    $routes->get('dashboard/akun/deleteAkun/(:num)', 'Admin\Dashboard::deleteAkun/$1');
     // Tambahkan route lain untuk admin
 });
 
@@ -41,6 +55,8 @@ $routes->group('krew', ['filter' => 'auth:krew'], function ($routes) {
 // Route untuk Pelanggan
 $routes->group('pelanggan', ['filter' => 'auth:pelanggan'], function ($routes) {
     $routes->get('dashboard', 'Pelanggan\Dashboard::index');
+    $routes->get('barang/detail/(:num)', 'Pelanggan\Dashboard::detail_barang/$1'); // Detail barang
+    $routes->get('search', 'Pelanggan\Dashboard::search'); // Cari barang
     // Tambahkan route lain untuk pelanggan
 });
 

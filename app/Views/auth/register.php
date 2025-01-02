@@ -1,70 +1,85 @@
-<!DOCTYPE html>
-<html lang="en">
+<?= $this->extend('auth/template/index'); ?>
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Register</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-</head>
+<?= $this->section('content'); ?>
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-4 col-md-6">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h4 class="text-center mb-4 mt-2">Daftar</h4>
+                    <p class="text-center">
+                        Sudah punya akun Alfastore?
+                        <a href="<?= base_url('auth/login'); ?>" class="fw-bold text-decoration-none">Masuk</a>
+                    </p>
 
-<body class="bg-light">
-    <div class="container">
-        <div class="row justify-content-center mt-5">
-            <div class="col-md-6">
-                <div class="card">
-                    <div class="card-body">
-                        <h3 class="card-title text-center mb-4">Register</h3>
-
-                        <?php if (session()->has('errors')): ?>
-                            <div class="alert alert-danger">
-                                <ul class="mb-0">
-                                    <?php foreach (session('errors') as $error): ?>
-                                        <li><?= esc($error) ?></li>
-                                    <?php endforeach ?>
-                                </ul>
-                            </div>
-                        <?php endif ?>
-
-                        <form action="<?= base_url('auth/processRegister') ?>" method="post">
-                            <div class="mb-3">
-                                <label class="form-label">Nama Lengkap</label>
-                                <input type="text" class="form-control" name="nama_lengkap" value="<?= old('nama_lengkap') ?>" required>
-                            </div>
-
-                            <div class="mb-3">
-                                <label class="form-label">Username</label>
-                                <input type="text" class="form-control" name="username" value="<?= old('username') ?>" required>
-                            </div>
-
-                            <div class="mb-3">
-                                <label class="form-label">Email</label>
-                                <input type="email" class="form-control" name="email" value="<?= old('email') ?>" required>
-                            </div>
-
-                            <div class="mb-3">
-                                <label class="form-label">No. Telp</label>
-                                <input type="text" class="form-control" name="no_telp" value="<?= old('no_telp') ?>" required>
-                            </div>
-
-                            <div class="mb-3">
-                                <label class="form-label">Password</label>
-                                <input type="password" class="form-control" name="password" required>
-                            </div>
-
-                            <button type="submit" class="btn btn-primary w-100">Register</button>
-                        </form>
-
-                        <div class="text-center mt-3">
-                            <p>Sudah punya akun? <a href="<?= base_url('login') ?>">Login</a></p>
+                    <?php if (session()->has('errors')): ?>
+                        <div class="alert alert-danger">
+                            <ul class="mb-0">
+                                <?php foreach (session('errors') as $error): ?>
+                                    <li><?= esc($error) ?></li>
+                                <?php endforeach ?>
+                            </ul>
                         </div>
-                    </div>
+                    <?php endif ?>
+
+                    <form action="<?= base_url('auth/processRegister') ?>" method="post">
+                        <div class="mb-3">
+                            <label class="form-label">Nama Lengkap</label>
+                            <input type="tel"
+                                class="form-control"
+                                name="nama_lengkap"
+                                placeholder="Masukkan nomor handphone"
+                                value="<?= old('nama_lengkap') ?>"
+                                required />
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Username</label>
+                            <input type="text"
+                                class="form-control"
+                                name="username"
+                                placeholder="Masukkan username"
+                                value="<?= old('username') ?>"
+                                required />
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Email</label>
+                            <input type="email"
+                                class="form-control"
+                                name="email"
+                                placeholder="Masukkan email"
+                                value="<?= old('email') ?>"
+                                required />
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">No. Handphone</label>
+                            <input type="tel"
+                                class="form-control"
+                                name="no_telp"
+                                placeholder="Masukkan nomor handphone"
+                                value="<?= old('no_telp') ?>"
+
+                                required />
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Password</label>
+                            <div class="input-group">
+                                <input type="password"
+                                    class="form-control"
+                                    name="password"
+                                    placeholder="Masukkan password"
+                                    required />
+                                <button class="btn btn-outline-secondary toggle-password" type="button">
+                                    <i class="bi bi-eye-slash"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-danger w-100">
+                            Daftar
+                        </button>
+                    </form>
                 </div>
             </div>
         </div>
     </div>
-
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-</body>
-
-</html>
+</div>
+<?= $this->endSection(); ?>

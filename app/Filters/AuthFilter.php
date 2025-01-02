@@ -14,7 +14,7 @@ class AuthFilter implements FilterInterface
         $currentPath = $request->getUri()->getPath();
 
         // Daftar path publik yang tidak perlu autentikasi
-        $publicPaths = ['', 'login', 'register', 'auth/processLogin', 'auth/processRegister', 'logout'];
+        $publicPaths = ['login', 'register', 'auth/processLogin', 'auth/processRegister', 'logout'];
 
         // Jika user sudah login
         if (session()->get('logged_in')) {

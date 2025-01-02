@@ -36,6 +36,7 @@ class Auth extends BaseController
                 'email'        => $user['email'],
                 'role'         => $user['role'],
                 'nama_lengkap' => $user['nama_lengkap'],
+                'foto_profil'  => $user['foto_profil'],
                 'logged_in'    => true
             ];
 
@@ -70,7 +71,9 @@ class Auth extends BaseController
             'username' => 'required|is_unique[pengguna.username]|min_length[4]',
             'email'    => 'required|valid_email|is_unique[pengguna.email]',
             'no_telp'  => 'required|is_unique[pengguna.no_telp]|numeric',
+            'foto_profil' => 'if_exist|is_image[foto_profil]|max_size[foto_profil,2048]|mime_in[foto_profil,image/jpg,image/jpeg,image/png]',
             'password' => 'required|min_length[6]'
+
         ];
 
         if (!$this->validate($rules)) {

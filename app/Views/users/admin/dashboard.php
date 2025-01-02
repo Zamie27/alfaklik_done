@@ -1,49 +1,60 @@
-<!DOCTYPE html>
-<html lang="en">
+<?= $this->extend('users/admin/template/index'); ?>
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Dashboard</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-</head>
+<?= $this->section('content'); ?>
 
-<body>
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-        <div class="container">
-            <a class="navbar-brand" href="#">Admin Panel</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav me-auto">
-                    <li class="nav-item">
-                        <a class="nav-link active" href="<?= base_url('admin/dashboard') ?>">Dashboard</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="<?= base_url('admin/users') ?>">Manage Users</a>
-                    </li>
-                </ul>
-                <ul class="navbar-nav">
-                    <li class="nav-item">
-                        <a class="nav-link" href="<?= base_url('logout') ?>">Logout</a>
-                    </li>
-                </ul>
+<div class="container mt-1">
+    <div class="content flex-grow-1">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1 class="mb-4">Dashboard</h1>
+        </div>
+        <div class="row g-3 mb-4">
+            <div class="col-md-3">
+                <div class="card">
+                    <div class="card-body text-center">
+                        <h5 class="card-title">Barang</h5>
+                        <p class="card-text">1</p>
+                        <i class="fas fa-calendar-alt"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card">
+                    <div class="card-body text-center">
+                        <h5 class="card-title">Pengguna</h5>
+                        <p class="card-text">1</p>
+                        <i class="fas fa-calendar-alt"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card">
+                    <div class="card-body text-center">
+                        <h5 class="card-title">Transaksi</h5>
+                        <p class="card-text">1</p>
+                        <i class="fas fa-calendar-alt"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card">
+                    <div class="card-body text-center">
+                        <h5 class="card-title">Kategori</h5>
+                        <p class="card-text">0</p>
+                        <i class="fas fa-calendar-alt"></i>
+                    </div>
+                </div>
             </div>
         </div>
-    </nav>
+    </div>
 
     <div class="container mt-4">
-        <h2>Welcome, Admin!</h2>
-        <!-- Konten dashboard admin -->
+        <h2>Welcome, <?= session()->get('role') ?? 'Unknown'; ?>!</h2>
+        <!-- Konten dashboard krew -->
     </div>
-
-    <div class="card-body">
-        <p><strong>Name:</strong> <?= session()->get('nama_lengkap') ?? 'Guest'; ?></p>
-        <p><strong>Role:</strong> <?= session()->get('role') ?? 'Unknown'; ?></p>
+    <div class="container">
+        <div class="card-body">
+            <p><strong>Name:</strong> <?= session()->get('nama_lengkap') ?? 'Guest'; ?></p>
+            <p><strong>Role:</strong> <?= session()->get('role') ?? 'Unknown'; ?></p>
+        </div>
     </div>
-
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-</body>
-
-</html>
+    <?= $this->endSection('content'); ?>
