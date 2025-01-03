@@ -32,7 +32,7 @@
                                 <button
                                     class="btn btn-secondary w-100"
                                     disabled>
-                                    Kosong
+                                    Kosonggg
                                 </button>
                             <?php endif; ?>
                         </div>
