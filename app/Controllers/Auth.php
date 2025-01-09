@@ -34,6 +34,8 @@ class Auth extends BaseController
                 'id_pengguna' => $user['id_pengguna'],
                 'username'    => $user['username'],
                 'email'       => $user['email'],
+                'no_telp'       => $user['no_telp'],
+                'alamat'        => $user['alamat'],
                 'role'        => $user['role'],
                 'nama_lengkap' => $user['nama_lengkap'],
                 'foto_profil' => $user['foto_profil'],

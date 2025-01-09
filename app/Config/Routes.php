@@ -64,6 +64,11 @@ $routes->group('pelanggan', ['filter' => 'auth:pelanggan'], function ($routes) {
     $routes->post('cart/update', 'Pelanggan\CartController::updateQuantity');
     $routes->get('checkout', 'Pelanggan\OrderController::checkout');
     $routes->post('order/place', 'Pelanggan\OrderController::placeOrder');
+    // profile pelanggan
+    $routes->get('profile', 'Pelanggan\ProfileController::index');
+    $routes->post('profile/update', 'Pelanggan\ProfileController::update');
+    $routes->post('profile/updatePhoto', 'Pelanggan\ProfileController::updatePhoto');
+
     // Tambahkan route lain untuk pelanggan
 });
 
