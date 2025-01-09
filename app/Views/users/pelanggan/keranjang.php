@@ -58,7 +58,7 @@
         </div>
 
         <!-- Ringkasan Pesanan -->
-        <div class="col-lg-4">
+        <div class="col-lg-4 sticky-summary">
             <div class="card border-0 shadow">
                 <div class="card-body">
                     <h5 class="fw-bold">Ringkasan Pesanan</h5>
@@ -92,6 +92,22 @@
         display: block;
         margin-left: auto;
         margin-right: auto;
+    }
+
+    .sticky-summary {
+        position: sticky;
+        top: 70px;
+        /* Tinggi navbar agar tidak tertutup */
+        z-index: 1000;
+        /* Pastikan di atas konten lainnya */
+    }
+
+    @media (max-width: 992px) {
+
+        /* Nonaktifkan sticky untuk layar kecil */
+        .sticky-summary {
+            position: static;
+        }
     }
 </style>
 

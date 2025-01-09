@@ -184,6 +184,13 @@
     </footer>
     <!-- Footer end -->
 
+
+    <style>
+        nav.sticky-top {
+            height: 70px;
+            /* Sesuaikan dengan tinggi navbar */
+        }
+    </style>
     <!-- js -->
     <script src="<?= base_url('js/pelanggan/index.js'); ?>"></script>
 
