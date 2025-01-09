@@ -12,39 +12,46 @@ document.getElementById("see-more").addEventListener("click", function () {
   this.style.display = "none";
 });
 
-//  Js Klik Tombol Beli Card barang
-document.addEventListener("DOMContentLoaded", () => {
+// JS notifikasi klik tombol Beli barang
+document.addEventListener("DOMContentLoaded", function () {
   const buttons = document.querySelectorAll(".add-to-cart");
 
   buttons.forEach((button) => {
     button.addEventListener("click", function (e) {
-      e.preventDefault(); // Mencegah perilaku default seperti redirect ke halaman card
-      const itemId = this.getAttribute("data-id");
+      e.preventDefault(); // Cegah tindakan default (jika ada)
+      const productId = this.getAttribute("data-id");
       const url = this.getAttribute("data-url");
 
+      // Disable tombol agar tidak bisa diklik lagi
+      this.disabled = true;
+      this.innerHTML = "Memproses...";
+
+      // Kirim data ke server menggunakan fetch
       fetch(url, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          "X-Requested-With": "XMLHttpRequest",
         },
-        body: JSON.stringify({ id_barang: itemId }),
+        body: JSON.stringify({
+          id_barang: productId,
+          quantity: 1, // Default jumlah
+        }),
       })
         .then((response) => response.json())
         .then((data) => {
           if (data.status === "success") {
             Swal.fire({
               icon: "success",
-              title: "Berhasil!",
-              text: data.message,
+              title: "Berhasil",
+              text: "Barang berhasil ditambahkan ke keranjang!",
               timer: 1500,
               showConfirmButton: false,
             });
           } else {
             Swal.fire({
               icon: "error",
-              title: "Gagal!",
-              text: data.message,
+              title: "Gagal",
+              text: "Terjadi kesalahan saat menambahkan barang ke keranjang.",
             });
           }
         })
@@ -52,9 +59,14 @@ document.addEventListener("DOMContentLoaded", () => {
           console.error("Error:", error);
           Swal.fire({
             icon: "error",
-            title: "Oops...",
-            text: "Terjadi kesalahan pada sistem.",
+            title: "Gagal",
+            text: "Terjadi kesalahan saat memproses permintaan.",
           });
+        })
+        .finally(() => {
+          // Aktifkan kembali tombol setelah proses selesai
+          this.disabled = false;
+          this.innerHTML = "Beli";
         });
     });
   });

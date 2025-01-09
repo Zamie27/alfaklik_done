@@ -112,7 +112,7 @@
                 <a href="notifikasi.html" class="btn btn-light border-0 me-1">
                     <i class="bi bi-bell"></i>
                 </a>
-                <a href="<?= base_url(); ?>/pelanggan/cart" class="btn btn-light border-0 me-5">
+                <a href="<?= base_url('pelanggan/cart'); ?>" class="btn btn-light border-0 me-5">
                     <i class="bi bi-cart"></i>
                 </a>
 

@@ -57,6 +57,13 @@ $routes->group('pelanggan', ['filter' => 'auth:pelanggan'], function ($routes) {
     $routes->get('dashboard', 'Pelanggan\Dashboard::index');
     $routes->get('barang/detail/(:num)', 'Pelanggan\Dashboard::detail_barang/$1'); // Detail barang
     $routes->get('search', 'Pelanggan\Dashboard::search'); // Cari barang
+    // Sistem Ckeckout
+    $routes->get('cart', 'Pelanggan\CartController::index');
+    $routes->post('cart/add', 'Pelanggan\CartController::addToCart');
+    $routes->post('cart/remove/(:num)', 'Pelanggan\CartController::removeFromCart/$1');
+    $routes->post('cart/update', 'Pelanggan\CartController::updateQuantity');
+    $routes->get('checkout', 'Pelanggan\OrderController::checkout');
+    $routes->post('order/place', 'Pelanggan\OrderController::placeOrder');
     // Tambahkan route lain untuk pelanggan
 });
 

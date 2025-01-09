@@ -22,4 +22,9 @@ class BarangModel extends Model
     {
         return $this->orderBy('created_at', 'DESC')->findAll();
     }
+    // Fungsi untuk mendapatkan barang berdasarkan ID
+    public function getBarangById($id)
+    {
+        return $this->find($id);
+    }
 }

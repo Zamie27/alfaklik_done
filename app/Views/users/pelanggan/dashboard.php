@@ -65,7 +65,8 @@
                                 <button
                                     class="btn btn-danger w-100 add-to-cart"
                                     data-id="<?= $item['id_barang'] ?>"
-                                    data-url="<?= base_url('pelanggan/cart/add') ?>">
+                                    data-name="<?= esc($item['nama_barang']) ?>"
+                                    data-url="cart/add">
                                     Beli
                                 </button>
                             <?php else: ?>
@@ -103,9 +104,11 @@
                             <button
                                 class="btn btn-danger w-100 add-to-cart"
                                 data-id="<?= $item['id_barang'] ?>"
-                                data-url="<?= base_url('pelanggan/cart/add') ?>">
+                                data-name="<?= esc($item['nama_barang']) ?>"
+                                data-url="cart/add">
                                 Beli
                             </button>
+
                         <?php else: ?>
                             <!-- Tombol Kosong -->
                             <button
@@ -145,4 +148,5 @@
 </style>
 
 <script src="<?= base_url('js/pelanggan/katalog.js'); ?>"></script>
+
 <?= $this->endSection(); ?>

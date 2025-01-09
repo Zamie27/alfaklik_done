@@ -21,11 +21,7 @@
 
             <!-- Deskripsi Produk -->
             <h4 class="fw-bold">Deskripsi</h4>
-            <p id="short-description">
-                <?= strlen($barang['deskripsi_barang']) > 150
-                    ? esc(substr($barang['deskripsi_barang'], 0, 150)) . '...'
-                    : esc($barang['deskripsi_barang']); ?>
-            </p>
+
             <?php if (strlen($barang['deskripsi_barang']) > 150): ?>
                 <p id="short-description">
                     <?= esc(substr($barang['deskripsi_barang'], 0, 150)) ?>...

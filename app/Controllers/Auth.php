@@ -31,13 +31,13 @@ class Auth extends BaseController
 
         if ($user) {
             $sessionData = [
-                'id_pengguna ' => $user['id_pengguna'],
-                'username'     => $user['username'],
-                'email'        => $user['email'],
-                'role'         => $user['role'],
+                'id_pengguna' => $user['id_pengguna'],
+                'username'    => $user['username'],
+                'email'       => $user['email'],
+                'role'        => $user['role'],
                 'nama_lengkap' => $user['nama_lengkap'],
-                'foto_profil'  => $user['foto_profil'],
-                'logged_in'    => true
+                'foto_profil' => $user['foto_profil'],
+                'logged_in'   => true
             ];
 
             session()->set($sessionData);
@@ -55,6 +55,7 @@ class Auth extends BaseController
 
         return redirect()->back()->with('error', 'Username/Email/No. Telp atau Password salah!');
     }
+
 
     public function register()
     {
