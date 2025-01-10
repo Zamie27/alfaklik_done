@@ -40,7 +40,7 @@
             <div class="card border-0 shadow-sm">
                 <div class="card-body">
                     <h5 class="fw-bold">Ringkasan Pesanan</h5>
-                    <form action="<?= base_url('pelanggan/checkout/to-payment') ?>" method="POST">
+                    <form action="<?= base_url('pelanggan/checkout') ?>" method="POST">
                         <div class="mb-3">
                             <label for="alamat_pengiriman" class="form-label">Alamat Pengiriman</label>
                             <textarea name="alamat_pengiriman" id="alamat_pengiriman" class="form-control" rows="3" required><?= esc($user['alamat']) ?></textarea>

@@ -109,6 +109,11 @@
                     </a>
                 </li>
                 <li>
+                    <a href="<?= base_url(); ?>admin/dashboard/banner" class="nav-link link-dark">
+                        Banner
+                    </a>
+                </li>
+                <li>
                     <a href="<?= base_url(); ?>admin/dashboard/barang" class="nav-link link-dark">
                         Barang
                     </a>
@@ -137,12 +142,12 @@
                     id="dropdownUser"
                     data-bs-toggle="dropdown"
                     aria-expanded="false">
-                    <img src="<?= base_url(); ?><?= session()->get('foto_profil') ?? 'Guest'; ?>" alt="" width="32" height="32" class="rounded-circle me-2">
+                    <img src="<?= base_url(); ?><?= session()->get('foto_profil') ?? 'Guest'; ?>" alt="" style="    object-fit: cover;" width="32" height="32" class="rounded-circle me-2">
                     <strong id="user-name"><?= session()->get('nama_lengkap') ?? 'Guest'; ?></strong>
                 </a>
                 <ul class="dropdown-menu text-small shadow"
                     aria-labelledby="dropdownUser">
-                    <li><a class="dropdown-item" href="#">Profile</a></li>
+                    <li><a class="dropdown-item" href="<?= base_url(); ?>admin/dashboard/profile">Profile</a></li>
                     <li>
                         <hr class="dropdown-divider">
                     </li>

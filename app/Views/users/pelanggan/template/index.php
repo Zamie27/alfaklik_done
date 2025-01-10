@@ -109,7 +109,7 @@
             </div>
             <!-- Icons and Links -->
             <div class="d-flex align-items-center">
-                <a href="notifikasi.html" class="btn btn-light border-0 me-1">
+                <a href="<?= base_url('pelanggan/orders'); ?>" class="btn btn-light border-0 me-1">
                     <i class="bi bi-bell"></i>
                 </a>
                 <a href="<?= base_url('pelanggan/cart'); ?>" class="btn btn-light border-0 me-5">
@@ -123,7 +123,7 @@
                         id="dropdownUser"
                         data-bs-toggle="dropdown"
                         aria-expanded="false">
-                        <img src="<?= base_url(); ?><?= session()->get('foto_profil') ?? 'Guest'; ?>" alt="" style="object-fit: cover;" width="32" height="32" class="rounded-circle me-2">
+                        <img src="<?= base_url(); ?><?= session()->get('foto_profil') ?? 'Guest'; ?>" alt="" style="    object-fit: cover;" width="32" height="32" class="rounded-circle me-2">
                         <strong id="user-name"><?= session()->get('nama_lengkap') ?? 'Guest'; ?></strong>
                     </a>
                     <ul class="dropdown-menu text-small shadow"

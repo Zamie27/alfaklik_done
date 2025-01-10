@@ -43,6 +43,17 @@ $routes->group('admin', ['filter' => 'auth:admin'], function ($routes) {
     $routes->get('dashboard/akun/editAkun/(:num)', 'Admin\Dashboard::editAkun/$1');
     $routes->post('dashboard/akun/updateAkun/(:num)', 'Admin\Dashboard::updateAkun/$1');
     $routes->get('dashboard/akun/deleteAkun/(:num)', 'Admin\Dashboard::deleteAkun/$1');
+    // sistem CRUD banner
+    $routes->get('dashboard/banner', 'Admin\Dashboard::indexBanner');
+    $routes->get('dashboard/banner/create', 'Admin\Dashboard::createBanner');
+    $routes->post('dashboard/banner/store', 'Admin\Dashboard::storeBanner');
+    $routes->get('dashboard/banner/edit/(:num)', 'Admin\Dashboard::editBanner/$1');
+    $routes->post('dashboard/banner/update/(:num)', 'Admin\Dashboard::updateBanner/$1');
+    $routes->get('dashboard/banner/delete/(:num)', 'Admin\Dashboard::deleteBanner/$1');
+    // profile pelanggan
+    $routes->get('dashboard/profile', 'Admin\Dashboard::indexProfile');
+    $routes->post('dashboard/profile/update', 'Admin\Dashboard::updateProfile');
+    $routes->post('dashboard/profile/updatePhoto', 'Admin\Dashboard::updatePhotoProfile');
     // Tambahkan route lain untuk admin
 });
 
@@ -55,31 +66,35 @@ $routes->group('krew', ['filter' => 'auth:krew'], function ($routes) {
 // Route untuk Pelanggan
 $routes->group('pelanggan', ['filter' => 'auth:pelanggan'], function ($routes) {
     $routes->get('dashboard', 'Pelanggan\Dashboard::index');
-    $routes->get('barang/detail/(:num)', 'Pelanggan\Dashboard::detail_barang/$1'); // Detail barang
-    $routes->get('search', 'Pelanggan\Dashboard::search'); // Cari barang
+    $routes->get('barang/detail/(:num)', 'Pelanggan\Dashboard::detail_barang/$1');
+    $routes->get('search', 'Pelanggan\Dashboard::search');
+
     // Keranjang
     $routes->get('cart', 'Pelanggan\CartController::index');
     $routes->post('cart/add', 'Pelanggan\CartController::addToCart');
     $routes->post('cart/remove/(:num)', 'Pelanggan\CartController::removeFromCart/$1');
     $routes->post('cart/update', 'Pelanggan\CartController::updateQuantity');
-    $routes->post('checkout', 'Pelanggan\CartController::checkout');
-    //
-    $routes->post('order/place', 'Pelanggan\OrderController::placeOrder');
-    $routes->get('checkout', 'Pelanggan\OrderController::checkout');
 
     // Checkout
     $routes->get('checkout', 'Pelanggan\CheckoutController::index');
-    $routes->get('checkout', 'Pelanggan\CheckoutController::checkout');
-    $routes->post('checkout/placeOrder', 'Pelanggan\CheckoutController::placeOrder');
-    $routes->post('checkout/to-payment', 'Pelanggan\CheckoutController::toPayment');
+    $routes->post('checkout', 'Pelanggan\CheckoutController::checkout');
+    // $routes->post('checkout', 'Pelanggan\CheckoutController::toPayment');
+    $routes->post('checkout/to-payment', 'Pelanggan\CheckoutController::toPayment'); // Proses pilih pembayaran
+
+    // Orders
+    $routes->get('orders', 'Pelanggan\OrderController::index');
+    $routes->get('orders/detail/(:num)', 'Pelanggan\OrderController::detail/$1');
+    $routes->post('order/place', 'Pelanggan\OrderController::placeOrder');
+    $routes->get('order/success', 'Pelanggan\OrderController::success');
+
     // Payment
-    $routes->get('payment', 'Pelanggan\PaymentController::index');
-    $routes->post('payment/confirm', 'Pelanggan\PaymentController::confirm');
-    // profile pelanggan
+    $routes->get('payment', 'Pelanggan\PaymentController::index'); // Halaman pembayaran
+    $routes->post('payment/confirm', 'Pelanggan\PaymentController::confirmPayment'); // Proses konfirmasi pembayaran
+
+    // Profile Pelanggan
     $routes->get('profile', 'Pelanggan\ProfileController::index');
     $routes->post('profile/update', 'Pelanggan\ProfileController::update');
     $routes->post('profile/updatePhoto', 'Pelanggan\ProfileController::updatePhoto');
-
 
     // Tambahkan route lain untuk pelanggan
 });

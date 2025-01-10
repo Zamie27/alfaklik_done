@@ -17,13 +17,13 @@ class OrderModel extends Model
         'total',
         'metode_pembayaran',
         'status',
-        'created_at',
+        'created_at'
     ];
 
-    public function saveOrderDetails($details)
+    public function getOrdersWithUser()
     {
-        $db = \Config\Database::connect();
-        $builder = $db->table('order_details');
-        $builder->insert($details);
+        return $this->select('orders.*, pengguna.nama_lengkap')
+            ->join('pengguna', 'pengguna.id_pengguna = orders.id_pengguna', 'left')
+            ->findAll();
     }
 }

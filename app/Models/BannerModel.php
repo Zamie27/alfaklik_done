@@ -8,5 +8,5 @@ class BannerModel extends Model
 {
     protected $table = 'banners';
     protected $primaryKey = 'id';
-    protected $allowedFields = ['image_path', 'link'];
+    protected $allowedFields = ['image_path', 'keterangan'];
 }

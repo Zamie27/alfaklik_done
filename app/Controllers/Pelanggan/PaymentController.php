@@ -2,80 +2,79 @@
 
 namespace App\Controllers\Pelanggan;
 
-use App\Controllers\BasePelanggan;
+use App\Controllers\BaseController;
 use App\Models\OrderModel;
+use App\Models\OrderDetailModel;
 use App\Models\CartModel;
 
-class PaymentController extends BasePelanggan
+class PaymentController extends BaseController
 {
-    protected $orderModel;
     protected $cartModel;
+    protected $orderModel;
+    protected $orderDetailModel;
 
     public function __construct()
     {
-        $this->orderModel = new OrderModel();
         $this->cartModel = new CartModel();
+        $this->orderModel = new OrderModel();
+        $this->orderDetailModel = new OrderDetailModel();
     }
 
+    // Halaman Pembayaran
     public function index()
     {
-        $id_pengguna = session()->get('id_pengguna');
-        $cart_items = $this->cartModel->getCartByUser($id_pengguna);
-
-        if (empty($cart_items)) {
-            return redirect()->to('pelanggan/cart')->with('error', 'Keranjang Anda kosong.');
+        // Ambil data checkout dari session
+        $checkout_data = session()->get('checkout_data');
+        if (!$checkout_data) {
+            return redirect()->to('pelanggan/checkout')->with('error', 'Checkout data tidak ditemukan.');
         }
 
-        $subtotal = array_sum(array_map(function ($item) {
-            return $item['harga_barang'] * $item['quantity'];
-        }, $cart_items));
-
+        // Siapkan data untuk tampilan
         $data = [
-            'cart_items' => $cart_items,
-            'subtotal' => $subtotal,
-            'total' => $subtotal, // Tambahkan biaya pengiriman jika ada
+            'alamat_pengiriman' => $checkout_data['alamat_pengiriman'],
+            'cart_items' => $checkout_data['cart_items'], // Barang dalam keranjang
+            'subtotal' => $checkout_data['subtotal'],
+            'ongkir' => 0, // Tambahkan biaya ongkir jika ada
+            'total' => $checkout_data['subtotal'], // Subtotal + ongkir
         ];
 
         return view('users/pelanggan/payment', $data);
     }
 
-    public function confirm()
+
+    // Proses Konfirmasi Pembayaran
+    public function confirmPayment()
     {
-        $id_pengguna = session()->get('id_pengguna');
-        $payment_method = $this->request->getPost('payment_method');
-
-        if (!$payment_method) {
-            return redirect()->back()->with('error', 'Silakan pilih metode pembayaran.');
+        $checkout_data = session()->get('checkout_data');
+        if (!$checkout_data) {
+            return redirect()->to('pelanggan/cart')->with('error', 'Checkout data tidak ditemukan.');
         }
 
-        $cart_items = $this->cartModel->getCartByUser($id_pengguna);
-
-        if (empty($cart_items)) {
-            return redirect()->to('pelanggan/cart')->with('error', 'Keranjang Anda kosong.');
+        $metode_pembayaran = $this->request->getPost('metode_pembayaran');
+        if (!$metode_pembayaran) {
+            return redirect()->back()->with('error', 'Metode pembayaran harus dipilih.');
         }
 
-        $subtotal = array_sum(array_map(function ($item) {
-            return $item['harga_barang'] * $item['quantity'];
-        }, $cart_items));
-        $ongkir = 0; // Ongkir bisa diatur sesuai kebutuhan
-        $total = $subtotal + $ongkir;
+        // Simpan ke database
+        $orderModel = new OrderModel();
+        $orderDetailModel = new OrderDetailModel();
 
-        // Buat pesanan baru
-        $order_id = $this->orderModel->insert([
-            'id_pengguna' => $id_pengguna,
-            'alamat_pengiriman' => $this->request->getPost('alamat_pengiriman'),
-            'jadwal_pengiriman' => date('Y-m-d H:i:s'),
-            'subtotal' => $subtotal,
-            'ongkir' => $ongkir,
-            'total' => $total,
-            'metode_pembayaran' => $payment_method,
+        $db = \Config\Database::connect();
+        $db->transStart();
+
+        $id_orders = $orderModel->insert([
+            'id_pengguna' => session()->get('id_pengguna'),
+            'alamat_pengiriman' => $checkout_data['alamat_pengiriman'],
+            'subtotal' => $checkout_data['subtotal'],
+            'ongkir' => 0,
+            'total' => $checkout_data['subtotal'],
+            'metode_pembayaran' => $metode_pembayaran,
             'status' => 'baru',
-        ]);
+        ], true);
 
-        // Simpan detail pesanan
-        foreach ($cart_items as $item) {
-            $this->orderModel->saveOrderDetails([
-                'id_orders' => $order_id,
+        foreach ($checkout_data['cart_items'] as $item) {
+            $orderDetailModel->insert([
+                'id_orders' => $id_orders,
                 'id_barang' => $item['id_barang'],
                 'quantity' => $item['quantity'],
                 'harga_satuan' => $item['harga_barang'],
@@ -83,9 +82,12 @@ class PaymentController extends BasePelanggan
             ]);
         }
 
-        // Hapus keranjang setelah checkout
-        $this->cartModel->where('id_pengguna', $id_pengguna)->delete();
+        $db->transComplete();
 
-        return redirect()->to('pelanggan/orders')->with('success', 'Pesanan Anda berhasil dibuat.');
+        if (!$db->transStatus()) {
+            return redirect()->back()->with('error', 'Gagal memproses pembayaran.');
+        }
+
+        return redirect()->to('pelanggan/order/success')->with('success', 'Pesanan berhasil dibuat.');
     }
 }

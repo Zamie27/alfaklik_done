@@ -46,7 +46,6 @@
                                         </button>
                                     </div>
                                 </li>
-
                             <?php endforeach; ?>
                         </ul>
                     <?php endif; ?>
@@ -76,6 +75,16 @@
                         <span id="summary-total">Rp <?= number_format($total, 0, ',', '.') ?></span>
                     </div>
                     <form action="<?= base_url('pelanggan/checkout') ?>" method="POST">
+                        <input type="hidden" name="csrf_token" value="<?= csrf_hash() ?>">
+                        <?php foreach ($cart_items as $item): ?>
+                            <input type="hidden" name="cart_items[<?= $item['id_barang'] ?>][id_barang]" value="<?= $item['id_barang'] ?>">
+                            <input type="hidden" name="cart_items[<?= $item['id_barang'] ?>][nama_barang]" value="<?= esc($item['nama_barang']) ?>">
+                            <input type="hidden" name="cart_items[<?= $item['id_barang'] ?>][quantity]" value="<?= $item['quantity'] ?>">
+                        <?php endforeach; ?>
+                        <div class="mb-3">
+                            <label for="alamat_pengiriman" class="form-label">Alamat Pengiriman</label>
+                            <textarea name="alamat_pengiriman" id="alamat_pengiriman" class="form-control" rows="3" required><?= esc($user['alamat']) ?></textarea>
+                        </div>
                         <button type="submit" class="btn btn-primary w-100 mt-3">Checkout</button>
                     </form>
                 </div>
@@ -83,7 +92,6 @@
         </div>
     </div>
 </div>
-
 
 <style>
     .btn-delete-item:hover {

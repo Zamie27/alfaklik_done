@@ -234,4 +234,209 @@ class Dashboard extends BaseAdmin
         $this->penggunaModel->delete($id);
         return redirect()->to('users/admin/akun')->with('success', 'Akun pengguna berhasil dihapus');
     }
+
+    // Sistem CRUD Banner
+    public function indexBanner()
+    {
+        $bannerModel = new \App\Models\BannerModel();
+        $banners = $bannerModel->findAll();
+
+        $data = [
+            'banners' => $banners,
+        ];
+
+        return view('users/admin/banner/index', $data);
+    }
+
+    public function createBanner()
+    {
+        return view('users/admin/banner/create');
+    }
+
+    public function storeBanner()
+    {
+        $bannerModel = new \App\Models\BannerModel();
+        $image = $this->request->getFile('banner_image');
+
+        if ($image && $image->isValid() && !$image->hasMoved()) {
+            $newName = $image->getRandomName();
+            $image->move('public/img/banner', $newName);
+
+            $bannerModel->save([
+                'image_path' => 'img/banner/' . $newName,
+                'keterangan' => $this->request->getPost('keterangan'),
+            ]);
+
+            return redirect()->to('/admin/dashboard/banner')->with('success', 'Banner berhasil ditambahkan.');
+        }
+
+        return redirect()->back()->with('error', 'Gagal menambahkan banner.');
+    }
+
+    public function editBanner($id)
+    {
+        $bannerModel = new \App\Models\BannerModel();
+        $banner = $bannerModel->find($id);
+
+        if (!$banner) {
+            return redirect()->to('/admin/dashboard/banner')->with('error', 'Banner tidak ditemukan.');
+        }
+
+        $data = [
+            'banner' => $banner,
+        ];
+
+        return view('users/admin/banner/edit', $data);
+    }
+
+    public function updateBanner($id)
+    {
+        $bannerModel = new \App\Models\BannerModel();
+        $banner = $bannerModel->find($id);
+
+        if (!$banner) {
+            return redirect()->to('/admin/dashboard/banner')->with('error', 'Banner tidak ditemukan.');
+        }
+
+        $image = $this->request->getFile('banner_image');
+        $imagePath = $banner['image_path']; // Default path adalah gambar lama
+
+        if ($image && $image->isValid() && !$image->hasMoved()) {
+            $newName = $image->getRandomName();
+            $image->move('public/img/banner', $newName);
+
+            // Hapus gambar lama jika ada
+            if ($imagePath && file_exists('public/' . $imagePath)) {
+                unlink('public/' . $imagePath);
+            }
+
+            $imagePath = 'img/banner/' . $newName;
+        }
+
+        $bannerModel->update($id, [
+            'image_path' => $imagePath,
+            'keterangan' => $this->request->getPost('keterangan'),
+        ]);
+
+        return redirect()->to('/admin/dashboard/banner')->with('success', 'Banner berhasil diperbarui.');
+    }
+
+    public function deleteBanner($id)
+    {
+        $bannerModel = new \App\Models\BannerModel();
+        $banner = $bannerModel->find($id);
+
+        if (!$banner) {
+            return redirect()->to('/admin/dashboard/banner')->with('error', 'Banner tidak ditemukan.');
+        }
+
+        // Hapus gambar dari folder jika ada
+        if ($banner['image_path'] && file_exists('public/' . $banner['image_path'])) {
+            unlink('public/' . $banner['image_path']);
+        }
+
+        $bannerModel->delete($id);
+
+        return redirect()->to('/admin/dashboard/banner')->with('success', 'Banner berhasil dihapus.');
+    }
+
+    // Sistem CRUD profile
+    public function indexProfile()
+    {
+        $data['user'] = $this->penggunaModel->find(session()->get('id_pengguna'));
+
+        if (!$data['user']) {
+            return redirect()->back()->with('error', 'Data pengguna tidak ditemukan.');
+        }
+
+        return view('users/admin/profile', $data);
+    }
+
+    public function updateProfile()
+    {
+        $id = session()->get('id_pengguna');
+        $user = $this->penggunaModel->find($id);
+
+        if (!$user) {
+            return redirect()->back()->with('error', 'Pengguna tidak ditemukan.');
+        }
+
+        // Validasi data
+        $rules = [
+            'nama_lengkap' => 'required|min_length[3]|max_length[255]',
+            'no_telp'      => 'required|min_length[10]|max_length[15]',
+            'email'        => 'required|valid_email|max_length[255]',
+            'alamat'       => 'permit_empty|max_length[255]',
+            'password'     => 'permit_empty|min_length[6]',
+            'confirm_password' => 'permit_empty|matches[password]',
+        ];
+
+        if (!$this->validate($rules)) {
+            return redirect()->back()->withInput()->with('error', $this->validator->getErrors());
+        }
+
+        // Data yang diperbarui
+        $data = [
+            'nama_lengkap' => $this->request->getPost('nama_lengkap'),
+            'no_telp'      => $this->request->getPost('no_telp'),
+            'email'        => $this->request->getPost('email'),
+            'alamat'       => $this->request->getPost('alamat'),
+        ];
+
+        // Proses perubahan password
+        $password = $this->request->getPost('password');
+        $confirmPassword = $this->request->getPost('confirm_password');
+
+        if (!empty($password) || !empty($confirmPassword)) {
+            if ($password !== $confirmPassword) {
+                return redirect()->back()->with('error', 'Password baru dan konfirmasi tidak cocok.');
+            }
+            $data['password'] = password_hash($password, PASSWORD_DEFAULT);
+        }
+
+        // Proses unggah foto profil
+        $file = $this->request->getFile('foto_profil');
+        if ($file && $file->isValid() && !$file->hasMoved()) {
+            $fileName = $file->getRandomName();
+            $file->move('uploads/profiles', $fileName);
+
+            // Hapus foto lama
+            if ($user['foto_profil'] && file_exists($user['foto_profil'])) {
+                unlink($user['foto_profil']);
+            }
+
+            $data['foto_profil'] = 'uploads/profiles/' . $fileName;
+        }
+
+        // Perbarui data
+        $this->penggunaModel->update($id, $data);
+
+        // Tambahkan pesan sukses berdasarkan perubahan
+        if (!empty($password)) {
+            return redirect()->back()->with('success', 'Password berhasil diperbarui!');
+        }
+
+        if ($file && $file->isValid() && !$file->hasMoved()) {
+            return redirect()->back()->with('success', 'Profil dan foto berhasil diperbarui!');
+        }
+
+        return redirect()->back()->with('success', 'Profil berhasil diperbarui!');
+    }
+
+
+    public function updatePhotoProfile()
+    {
+        $idPengguna = session()->get('id_pengguna');
+        $fotoProfil = $this->request->getFile('foto_profil');
+
+        if ($fotoProfil && $fotoProfil->isValid() && !$fotoProfil->hasMoved()) {
+            $newName = $fotoProfil->getRandomName();
+            $fotoProfil->move('img/users/admin/profile', $newName);
+
+            $this->penggunaModel->update($idPengguna, ['foto_profil' => 'img/users/admin/profile/' . $newName]);
+            return redirect()->back()->with('success', 'Foto profil berhasil diperbarui.');
+        }
+
+        return redirect()->back()->with('error', 'Gagal mengupload foto profil.');
+    }
 }

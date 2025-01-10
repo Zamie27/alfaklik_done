@@ -19,8 +19,8 @@ class CartController extends BasePelanggan
 
     public function index()
     {
-        // Ambil data keranjang untuk pengguna saat ini
-        $cartItems = $this->cartModel->getCartByUser(session()->get('id_pengguna'));
+        $id_pengguna = session()->get('id_pengguna');
+        $cartItems = $this->cartModel->getCartByUser($id_pengguna);
 
         // Hitung subtotal
         $subtotal = 0;
@@ -34,11 +34,21 @@ class CartController extends BasePelanggan
         // Total belanja
         $total = $subtotal - $discount;
 
+        // Dapatkan data pengguna dari session
+        $user = [
+            'nama' => session()->get('nama_lengkap'),
+            'alamat' => session()->get('alamat'),
+            'no_telp' => session()->get('no_telp'),
+        ];
+
         // Kirim data ke view
-        $data['cart_items'] = $cartItems;
-        $data['subtotal'] = $subtotal;
-        $data['discount'] = $discount;
-        $data['total'] = $total;
+        $data = [
+            'cart_items' => $cartItems,
+            'subtotal' => $subtotal,
+            'discount' => $discount,
+            'total' => $subtotal, // Tambahkan diskon atau ongkir jika ada
+            'user' => $user,
+        ];
 
         return view('users/pelanggan/keranjang', $data);
     }

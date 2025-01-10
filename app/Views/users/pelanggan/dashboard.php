@@ -9,10 +9,10 @@
         <div class="carousel-inner">
             <?php foreach ($banners as $index => $banner): ?>
                 <div class="carousel-item <?= $index === 0 ? 'active' : '' ?>">
-                    <a href="<?= esc($banner['link']) ?>">
+                    <a href="#">
                         <img
-                            src="<?= base_url($banner['image_path']) ?>"
-                            class="d-block w-100"
+                            src="<?= base_url('public/' . $banner['image_path']) ?>"
+                            class="d-block w-100" style="height: 65vh; object-fit: cover;"
                             alt="Banner <?= esc($banner['id']) ?>" />
                     </a>
                 </div>

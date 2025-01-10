@@ -4,59 +4,79 @@
 
 <div class="container py-4">
     <div class="row justify-content-center">
-        <!-- Pilihan Metode Pembayaran -->
+        <!-- Detail Pembayaran -->
         <div class="col-lg-8">
-            <h2 class="fw-bold mb-4">Metode Pembayaran</h2>
+            <h2 class="fw-bold mb-4">Pembayaran</h2>
             <div class="card border-0 shadow-sm">
                 <div class="card-body">
-                    <form action="<?= base_url('pelanggan/payment/confirm') ?>" method="POST">
-                        <!-- Alamat Pengiriman -->
-                        <div class="mb-4">
-                            <label for="alamat_pengiriman" class="form-label">Alamat Pengiriman</label>
-                            <textarea name="alamat_pengiriman" id="alamat_pengiriman" class="form-control" rows="3" required><?= session()->get('alamat') ?></textarea>
-                        </div>
-
-                        <!-- Pilihan Pembayaran -->
-                        <div class="form-check mb-4">
-                            <input class="form-check-input" type="radio" name="payment_method" id="cod" value="cod" required>
-                            <label class="form-check-label" for="cod">
-                                <img src="<?= base_url('img/cod.png') ?>" alt="COD" style="width: 40px; height: 40px;">
-                                Cash On Delivery (COD)
-                            </label>
-                        </div>
-                        <div class="form-check mb-4">
-                            <input class="form-check-input" type="radio" name="payment_method" id="qris" value="qris" required>
-                            <label class="form-check-label" for="qris">
-                                <img src="<?= base_url('img/qris.png') ?>" alt="QRIS" style="width: 40px; height: 40px;">
-                                QRIS
-                            </label>
-                        </div>
-                        <div class="text-end">
-                            <button type="submit" class="btn btn-primary">Bayar</button>
-                        </div>
-                    </form>
+                    <p class="fw-bold">Detail Pengiriman</p>
+                    <hr>
+                    <p><strong>Alamat:</strong> <?= esc($alamat_pengiriman) ?></p>
+                    <hr>
+                    <p class="fw-bold">Detail Pesanan</p>
+                    <ul class="list-group mb-4">
+                        <?php foreach ($cart_items as $item): ?>
+                            <li class="list-group-item d-flex align-items-center shadow-sm">
+                                <!-- Gambar Barang -->
+                                <img src="<?= base_url($item['gambar_barang']) ?>" alt="<?= esc($item['nama_barang']) ?>"
+                                    class="rounded me-3" style="width: 70px; height: 70px; object-fit: cover;">
+                                <div class="d-flex justify-content-between w-100">
+                                    <div>
+                                        <p class="mb-0 fw-bold"><?= esc($item['nama_barang']) ?></p>
+                                        <small>Jumlah: <?= $item['quantity'] ?></small>
+                                    </div>
+                                    <span>Rp <?= number_format($item['harga_barang'] * $item['quantity'], 0, ',', '.') ?></span>
+                                </div>
+                            </li>
+                        <?php endforeach; ?>
+                    </ul>
+                    <div class="d-flex justify-content-between fw-bold">
+                        <span>Subtotal</span>
+                        <span>Rp <?= number_format($subtotal, 0, ',', '.') ?></span>
+                    </div>
+                    <div class="d-flex justify-content-between">
+                        <span>Ongkos Kirim</span>
+                        <span>Rp <?= number_format($ongkir, 0, ',', '.') ?></span>
+                    </div>
+                    <hr>
+                    <div class="d-flex justify-content-between fw-bold">
+                        <span>Total</span>
+                        <span>Rp <?= number_format($total, 0, ',', '.') ?></span>
+                    </div>
                 </div>
             </div>
         </div>
 
-        <!-- Ringkasan Pesanan -->
+        <!-- Pilih Metode Pembayaran -->
         <div class="col-lg-4 sticky-summary">
             <div class="card border-0 shadow-sm">
                 <div class="card-body">
-                    <h5 class="fw-bold">Ringkasan Pesanan</h5>
-                    <div class="d-flex justify-content-between py-2">
-                        <span>Subtotal</span>
-                        <span>Rp <?= number_format($subtotal, 0, ',', '.'); ?></span>
-                    </div>
-                    <div class="d-flex justify-content-between py-2">
-                        <span>Ongkos Kirim</span>
-                        <span>Rp 0</span>
-                    </div>
-                    <hr>
-                    <div class="d-flex justify-content-between py-2 fw-bold">
-                        <span>Total</span>
-                        <span>Rp <?= number_format($total, 0, ',', '.'); ?></span>
-                    </div>
+                    <h5 class="fw-bold">Pilih Metode Pembayaran</h5>
+                    <form action="<?= base_url('pelanggan/payment/confirm') ?>" method="POST">
+                        <?= csrf_field() ?>
+                        <!-- Kirim ulang data keranjang dan pengiriman -->
+                        <?php foreach ($cart_items as $item): ?>
+                            <input type="hidden" name="cart_items[<?= $item['id_barang'] ?>][id_barang]" value="<?= $item['id_barang'] ?>">
+                            <input type="hidden" name="cart_items[<?= $item['id_barang'] ?>][nama_barang]" value="<?= esc($item['nama_barang']) ?>">
+                            <input type="hidden" name="cart_items[<?= $item['id_barang'] ?>][quantity]" value="<?= $item['quantity'] ?>">
+                            <input type="hidden" name="cart_items[<?= $item['id_barang'] ?>][harga_barang]" value="<?= $item['harga_barang'] ?>">
+                        <?php endforeach; ?>
+                        <input type="hidden" name="alamat_pengiriman" value="<?= esc($alamat_pengiriman) ?>">
+                        <input type="hidden" name="subtotal" value="<?= $subtotal ?>">
+                        <input type="hidden" name="ongkir" value="<?= $ongkir ?>">
+                        <input type="hidden" name="total" value="<?= $total ?>">
+
+                        <!-- Pilihan Metode Pembayaran -->
+                        <div class="form-check">
+                            <input type="radio" name="metode_pembayaran" id="cod" value="cod" class="form-check-input" required>
+                            <label for="cod" class="form-check-label">Cash on Delivery (COD)</label>
+                        </div>
+                        <div class="form-check">
+                            <input type="radio" name="metode_pembayaran" id="qris" value="qris" class="form-check-input">
+                            <label for="qris" class="form-check-label">QRIS</label>
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100 mt-3">Bayar</button>
+                    </form>
                 </div>
             </div>
         </div>
