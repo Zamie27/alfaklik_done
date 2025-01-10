@@ -75,7 +75,9 @@
                         <span>Total Belanja</span>
                         <span id="summary-total">Rp <?= number_format($total, 0, ',', '.') ?></span>
                     </div>
-                    <button class="btn btn-primary w-100 mt-3">Checkout</button>
+                    <form action="<?= base_url('pelanggan/checkout') ?>" method="POST">
+                        <button type="submit" class="btn btn-primary w-100 mt-3">Checkout</button>
+                    </form>
                 </div>
             </div>
         </div>

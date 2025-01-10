@@ -16,6 +16,14 @@ class OrderModel extends Model
         'ongkir',
         'total',
         'metode_pembayaran',
-        'status'
+        'status',
+        'created_at',
     ];
+
+    public function saveOrderDetails($details)
+    {
+        $db = \Config\Database::connect();
+        $builder = $db->table('order_details');
+        $builder->insert($details);
+    }
 }

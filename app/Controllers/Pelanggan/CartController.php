@@ -29,7 +29,7 @@ class CartController extends BasePelanggan
         }
 
         // Diskon (bisa disesuaikan)
-        $discount = 5000; // Contoh nilai diskon tetap
+        $discount = 0; // Contoh nilai diskon tetap
 
         // Total belanja
         $total = $subtotal - $discount;
@@ -83,9 +83,6 @@ class CartController extends BasePelanggan
             'message' => 'Barang berhasil ditambahkan ke keranjang'
         ]);
     }
-
-
-
 
     public function removeFromCart($id_carts)
     {
@@ -183,5 +180,27 @@ class CartController extends BasePelanggan
                 'message' => 'Terjadi kesalahan saat memperbarui kuantiti'
             ])->setStatusCode(500);
         }
+    }
+
+    public function checkout()
+    {
+        $id_pengguna = session()->get('id_pengguna');
+        $cart_items = $this->cartModel->getCartByUser($id_pengguna);
+
+        if (empty($cart_items)) {
+            return redirect()->to('pelanggan/cart')->with('error', 'Keranjang Anda kosong.');
+        }
+
+        $subtotal = array_sum(array_map(function ($item) {
+            return $item['harga_barang'] * $item['quantity'];
+        }, $cart_items));
+
+        $data = [
+            'cart_items' => $cart_items,
+            'subtotal' => $subtotal,
+            'user' => session()->get(),
+        ];
+
+        return view('users/pelanggan/checkout', $data);
     }
 }

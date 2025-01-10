@@ -21,6 +21,10 @@
             <label for="deskripsi_barang" class="form-label">Deskripsi</label>
             <textarea name="deskripsi_barang" id="deskripsi_barang" class="form-control" rows="4" required></textarea>
         </div>
+        <div class="mb-3">
+            <label for="gambar_barang" class="form-label">Gambar Barang</label>
+            <input type="file" name="gambar_barang" id="gambar_barang" class="form-control" accept="image/*" required>
+        </div>
 
         <button type="submit" class="btn btn-primary">Simpan</button>
         <a href="<?= base_url('/admin/dashboard/barang') ?>" class="btn btn-secondary">Batal</a>

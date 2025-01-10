@@ -60,8 +60,26 @@ class Dashboard extends BaseAdmin
     // Proses tambah barang
     public function storeBarang()
     {
-        $this->barangModel->save($this->request->getPost());
-        return redirect()->to('/admin/dashboard/barang')->with('success', 'Barang berhasil ditambahkan.');
+        $fotoBarang = $this->request->getFile('gambar_barang');
+
+        if ($fotoBarang && $fotoBarang->isValid() && !$fotoBarang->hasMoved()) {
+            // Generate nama file baru yang unik
+            $newName = $fotoBarang->getRandomName();
+            $fotoBarang->move('img/barang', $newName);
+
+            // Simpan data barang ke database
+            $this->barangModel->save([
+                'nama_barang' => $this->request->getPost('nama_barang'),
+                'harga_barang' => $this->request->getPost('harga_barang'),
+                'deskripsi_barang' => $this->request->getPost('deskripsi_barang'),
+                'jumlah_stock' => $this->request->getPost('jumlah_stock'),
+                'gambar_barang' => 'img/barang/' . $newName, // Path lengkap gambar
+            ]);
+
+            return redirect()->to('/admin/dashboard/barang')->with('success', 'Barang berhasil ditambahkan.');
+        }
+
+        return redirect()->back()->with('error', 'Gagal menambahkan barang. Pastikan semua data diisi dengan benar.');
     }
 
     // Form edit barang
@@ -76,9 +94,46 @@ class Dashboard extends BaseAdmin
     // Proses update barang
     public function updateBarang($id)
     {
-        $this->barangModel->update($id, $this->request->getPost());
-        return redirect()->to('/admin/dashboard/barang')->with('success', 'Barang berhasil diubah.');
+        // Ambil data barang berdasarkan ID
+        $barang = $this->barangModel->find($id);
+
+        if (!$barang) {
+            return redirect()->to('/admin/dashboard/barang')->with('error', 'Barang tidak ditemukan.');
+        }
+
+        // Proses gambar baru jika diunggah
+        $fotoBarang = $this->request->getFile('gambar_barang');
+        $gambarPath = $barang['gambar_barang']; // Gunakan gambar lama sebagai default
+
+        if ($fotoBarang && $fotoBarang->isValid() && !$fotoBarang->hasMoved()) {
+            // Generate nama file baru
+            $newName = $fotoBarang->getRandomName();
+            $fotoBarang->move('img/barang', $newName);
+
+            // Hapus gambar lama jika ada
+            if ($gambarPath && file_exists($gambarPath)) {
+                unlink($gambarPath);
+            }
+
+            // Update path gambar dengan file baru
+            $gambarPath = 'img/barang/' . $newName;
+        }
+
+        // Update data barang
+        $data = [
+            'nama_barang' => $this->request->getPost('nama_barang'),
+            'harga_barang' => $this->request->getPost('harga_barang'),
+            'deskripsi_barang' => $this->request->getPost('deskripsi_barang'),
+            'jumlah_stock' => $this->request->getPost('jumlah_stock'),
+            'gambar_barang' => $gambarPath,
+        ];
+
+        $this->barangModel->update($id, $data);
+
+        return redirect()->to('/admin/dashboard/barang')->with('success', 'Barang berhasil diperbarui.');
     }
+
+
 
     // Proses hapus barang
     public function deleteBarang($id)

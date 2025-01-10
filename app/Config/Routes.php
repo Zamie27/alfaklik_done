@@ -57,17 +57,29 @@ $routes->group('pelanggan', ['filter' => 'auth:pelanggan'], function ($routes) {
     $routes->get('dashboard', 'Pelanggan\Dashboard::index');
     $routes->get('barang/detail/(:num)', 'Pelanggan\Dashboard::detail_barang/$1'); // Detail barang
     $routes->get('search', 'Pelanggan\Dashboard::search'); // Cari barang
-    // Sistem Ckeckout
+    // Keranjang
     $routes->get('cart', 'Pelanggan\CartController::index');
     $routes->post('cart/add', 'Pelanggan\CartController::addToCart');
     $routes->post('cart/remove/(:num)', 'Pelanggan\CartController::removeFromCart/$1');
     $routes->post('cart/update', 'Pelanggan\CartController::updateQuantity');
-    $routes->get('checkout', 'Pelanggan\OrderController::checkout');
+    $routes->post('checkout', 'Pelanggan\CartController::checkout');
+    //
     $routes->post('order/place', 'Pelanggan\OrderController::placeOrder');
+    $routes->get('checkout', 'Pelanggan\OrderController::checkout');
+
+    // Checkout
+    $routes->get('checkout', 'Pelanggan\CheckoutController::index');
+    $routes->get('checkout', 'Pelanggan\CheckoutController::checkout');
+    $routes->post('checkout/placeOrder', 'Pelanggan\CheckoutController::placeOrder');
+    $routes->post('checkout/to-payment', 'Pelanggan\CheckoutController::toPayment');
+    // Payment
+    $routes->get('payment', 'Pelanggan\PaymentController::index');
+    $routes->post('payment/confirm', 'Pelanggan\PaymentController::confirm');
     // profile pelanggan
     $routes->get('profile', 'Pelanggan\ProfileController::index');
     $routes->post('profile/update', 'Pelanggan\ProfileController::update');
     $routes->post('profile/updatePhoto', 'Pelanggan\ProfileController::updatePhoto');
+
 
     // Tambahkan route lain untuk pelanggan
 });
