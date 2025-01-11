@@ -54,12 +54,25 @@ $routes->group('admin', ['filter' => 'auth:admin'], function ($routes) {
     $routes->get('dashboard/profile', 'Admin\Dashboard::indexProfile');
     $routes->post('dashboard/profile/update', 'Admin\Dashboard::updateProfile');
     $routes->post('dashboard/profile/updatePhoto', 'Admin\Dashboard::updatePhotoProfile');
+    // Laporan Penjualan
+    $routes->get('laporan-penjualan', 'Admin\Dashboard::laporanPenjualan');
+    $routes->get('detail-order/(:num)', 'Admin\Dashboard::detailOrder/$1');
     // Tambahkan route lain untuk admin
 });
 
 // Route untuk Krew
 $routes->group('krew', ['filter' => 'auth:krew'], function ($routes) {
     $routes->get('dashboard', 'Krew\Dashboard::index');
+    $routes->get('orders', 'Krew\Dashboard::orders');
+    $routes->get('orders/detail/(:num)', 'Krew\Dashboard::detail/$1');
+    $routes->get('orders/process/(:num)', 'Krew\Dashboard::process/$1');
+    $routes->get('orders/ship/(:num)', 'Krew\Dashboard::ship/$1');
+    $routes->get('orders/complete/(:num)', 'Krew\Dashboard::complete/$1');
+    $routes->get('orders/cancel/(:num)', 'Krew\Dashboard::cancel/$1');
+    // profile pelanggan
+    $routes->get('dashboard/profile', 'Krew\Dashboard::indexProfile');
+    $routes->post('dashboard/profile/update', 'Krew\Dashboard::updateProfile');
+    $routes->post('dashboard/profile/updatePhoto', 'Krew\Dashboard::updatePhotoProfile');
     // Tambahkan route lain untuk krew
 });
 
@@ -78,7 +91,7 @@ $routes->group('pelanggan', ['filter' => 'auth:pelanggan'], function ($routes) {
     // Checkout
     $routes->get('checkout', 'Pelanggan\CheckoutController::index');
     $routes->post('checkout', 'Pelanggan\CheckoutController::checkout');
-    // $routes->post('checkout', 'Pelanggan\CheckoutController::toPayment');
+    $routes->post('checkoutp', 'Pelanggan\CheckoutController::toPayment');
     $routes->post('checkout/to-payment', 'Pelanggan\CheckoutController::toPayment'); // Proses pilih pembayaran
 
     // Orders

@@ -6,18 +6,15 @@ use App\Controllers\BaseAdmin;
 use App\Models\BarangModel;
 use App\Models\PenggunaModel;
 use App\Models\OrderModel;
-use App\Models\BannerModel;
 
 class Dashboard extends BaseAdmin
 {
-    protected $bannerModel;
     protected $barangModel;
     protected $penggunaModel;
     protected $orderModel;
 
     public function __construct()
     {
-        $this->bannerModel = new BannerModel();
         $this->barangModel = new BarangModel();
         $this->penggunaModel = new PenggunaModel();
         $this->orderModel = new OrderModel();
@@ -25,14 +22,7 @@ class Dashboard extends BaseAdmin
 
     public function index()
     {
-        $data = [
-            'bannerCount' => $this->bannerModel->countAll(),
-            'barangCount' => $this->barangModel->countAll(),
-            'penggunaCount' => $this->penggunaModel->countAll(),
-            'transaksiSelesaiCount' => $this->orderModel->where('status', 'selesai')->countAllResults(),
-        ];
-
-        return view('users/admin/dashboard', $data);
+        return view('users/admin/dashboard');
     }
 
     // Sistem CRUD barang

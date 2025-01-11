@@ -15,6 +15,13 @@
 
     <!-- Style Css -->
     <style>
+        /* Dashboard Styling */
+        .dashboard-wrapper {
+            min-height: 70vh;
+            display: flex;
+            flex-direction: column;
+        }
+
         .navbar-custom {
             background-color: #3a3a3a;
             /* Warna latar belakang navbar */
@@ -90,7 +97,7 @@
     <nav class="bg-light p-3 shadow-sm sticky-top">
         <div class="container d-flex align-items-center justify-content-between">
             <!-- Logo -->
-            <a class="navbar-brand d-flex align-items-center" href="#">
+            <a class="navbar-brand d-flex align-items-center" href="<?= base_url('krew/dashboard'); ?>">
                 <img src="<?= base_url(); ?>/img/logo.png" alt="Alfagift Logo" class="me-2" height="40" />
             </a>
             <div class="d-flex align-items-center">
@@ -101,12 +108,22 @@
                         id="dropdownUser"
                         data-bs-toggle="dropdown"
                         aria-expanded="false">
-                        <img src="<?= base_url(); ?><?= session()->get('foto_profil') ?? 'Guest'; ?>" alt="" width="32" height="32" class="rounded-circle me-2">
-                        <strong id="user-name"><?= session()->get('nama_lengkap') ?? 'Guest'; ?></strong>
+                        <?php
+                        $db = \Config\Database::connect();
+                        $builder = $db->table('pengguna');
+                        $user = $builder->select('foto_profil')->where('id_pengguna', session()->get('id_pengguna'))->get()->getRowArray();
+                        $fotoProfil = $user['foto_profil'] ?? 'img/default-profile.png';
+                        ?>
+                        <img src="<?= base_url($fotoProfil); ?>"
+                            alt="Profile Picture"
+                            width="40"
+                            height="40"
+                            class="rounded-circle rounded-profile me-2">
+                        <strong><?= session()->get('nama_lengkap') ?? 'Guest'; ?></strong>
                     </a>
                     <ul class="dropdown-menu text-small shadow"
                         aria-labelledby="dropdownUser">
-                        <li><a class="dropdown-item" href="#">Profile</a></li>
+                        <li><a class="dropdown-item" href="<?= base_url(); ?>krew/dashboard/profile">Profile</a></li>
                         <li>
                             <hr class="dropdown-divider">
                         </li>

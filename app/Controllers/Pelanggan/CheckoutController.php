@@ -49,30 +49,30 @@ class CheckoutController extends BaseController
     }
 
     // Proses ke Halaman Pembayaran
-    // public function toPayment()
-    // {
-    //     $id_pengguna = session()->get('id_pengguna');
-    //     $cart_items = $this->cartModel->getCartByUser($id_pengguna);
+    public function toPayment()
+    {
+        $id_pengguna = session()->get('id_pengguna');
+        $cart_items = $this->cartModel->getCartByUser($id_pengguna);
 
-    //     if (empty($cart_items)) {
-    //         return redirect()->to('pelanggan/cart')->with('error', 'Keranjang Anda kosong.');
-    //     }
+        if (empty($cart_items)) {
+            return redirect()->to('pelanggan/cart')->with('error', 'Keranjang Anda kosong.');
+        }
 
-    //     $alamat_pengiriman = $this->request->getPost('alamat_pengiriman');
+        $alamat_pengiriman = $this->request->getPost('alamat_pengiriman');
 
-    //     if (!$alamat_pengiriman) {
-    //         return redirect()->back()->with('error', 'Alamat pengiriman harus diisi.');
-    //     }
+        if (!$alamat_pengiriman) {
+            return redirect()->back()->with('error', 'Alamat pengiriman harus diisi.');
+        }
 
-    //     // Simpan data checkout ke sesi
-    //     session()->set('checkout_data', [
-    //         'alamat_pengiriman' => $alamat_pengiriman,
-    //         'cart_items' => $cart_items,
-    //         'subtotal' => array_sum(array_map(function ($item) {
-    //             return $item['harga_barang'] * $item['quantity'];
-    //         }, $cart_items)),
-    //     ]);
+        // Simpan data checkout ke sesi
+        session()->set('checkout_data', [
+            'alamat_pengiriman' => $alamat_pengiriman,
+            'cart_items' => $cart_items,
+            'subtotal' => array_sum(array_map(function ($item) {
+                return $item['harga_barang'] * $item['quantity'];
+            }, $cart_items)),
+        ]);
 
-    //     return redirect()->to('pelanggan/payment');
-    // }
+        return redirect()->to('pelanggan/payment');
+    }
 }

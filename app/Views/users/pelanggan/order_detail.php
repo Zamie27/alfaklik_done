@@ -9,7 +9,7 @@
         <div class="card-body">
             <h5 class="fw-bold mb-3">Informasi Pesanan</h5>
             <p><strong>ID Pesanan:</strong> #<?= esc($order['id_orders']) ?></p>
-            <p><strong>Status:</strong> <?= ucfirst($order['status']) ?></p>
+            <p><strong>Status:</strong><span class="badge bg-primary"><?= ucfirst($order['status']) ?></p>
             <p><strong>Tanggal Pemesanan:</strong> <?= date('d M Y - H:i', strtotime($order['created_at'])) ?></p>
         </div>
     </div>

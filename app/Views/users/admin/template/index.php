@@ -124,16 +124,10 @@
                     </a>
                 </li>
                 <li>
-                    <a href="#" class="nav-link link-dark">
-                        Penjualan
+                    <a href="<?= base_url(); ?>admin/laporan-penjualan" class="nav-link link-dark">
+                        Laporan Penjualan
                     </a>
                 </li>
-                <li>
-                    <a href="#" class="nav-link link-dark">
-                        Laporan
-                    </a>
-                </li>
-
             </ul>
             <hr>
             <div class="dropdown">

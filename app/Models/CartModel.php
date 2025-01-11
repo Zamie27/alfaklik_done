@@ -19,9 +19,9 @@ class CartModel extends Model
             ->findAll();
     }
 
-    // Hapus semua barang di keranjang untuk pengguna tertentu
-    public function clearCartByUser($userId)
+    // Hapus semua barang di keranjang berdasarkan pengguna
+    public function clearCartItemsBatch($id_pengguna)
     {
-        return $this->where('id_pengguna', $userId)->delete();
+        return $this->where('id_pengguna', $id_pengguna)->delete();
     }
 }

@@ -89,6 +89,8 @@ class OrderController extends BasePelanggan
 
     public function placeOrder()
     {
+        log_message('info', 'Memulai proses placeOrder');
+
         $db = \Config\Database::connect();
         $db->transStart();
 
@@ -96,6 +98,7 @@ class OrderController extends BasePelanggan
         $checkout_data = session()->get('checkout_data');
 
         if (!$checkout_data || empty($checkout_data['cart_items'])) {
+            log_message('error', 'Checkout data kosong atau cart_items kosong.');
             return redirect()->to('pelanggan/cart')->with('error', 'Keranjang Anda kosong.');
         }
 
@@ -112,6 +115,7 @@ class OrderController extends BasePelanggan
         ], true);
 
         if (!$id_orders) {
+            log_message('error', 'Gagal menyimpan ke tabel orders.');
             $db->transRollback();
             return redirect()->back()->with('error', 'Gagal membuat pesanan.');
         }
@@ -128,14 +132,32 @@ class OrderController extends BasePelanggan
             ]);
         }
 
+        // // Hapus semua barang di keranjang pengguna
+        // $cartModel = new \App\Models\CartModel();
+        // log_message('info', 'Proses menghapus keranjang dimulai untuk id_pengguna: ' . $id_pengguna);
+
+        // $result = $cartModel->where('id_pengguna', $id_pengguna)->delete();
+
+        // if ($result) {
+        //     log_message('info', 'Keranjang berhasil dihapus untuk id_pengguna: ' . $id_pengguna);
+        // } else {
+        //     log_message('error', 'Gagal menghapus keranjang untuk id_pengguna: ' . $id_pengguna);
+        // }
+
         $db->transComplete();
 
         if ($db->transStatus() === false) {
+            log_message('error', 'Transaksi database gagal.');
             return redirect()->back()->with('error', 'Gagal membuat pesanan.');
         }
 
-        return redirect()->to('pelanggan/orders/success')->with('success', 'Pesanan berhasil dibuat.');
+        log_message('info', 'Pesanan berhasil dibuat dengan id_orders: ' . $id_orders);
+
+        return redirect()->to('pelanggan/order/success')->with('success', 'Pesanan berhasil dibuat.');
     }
+
+
+
 
     public function success()
     {

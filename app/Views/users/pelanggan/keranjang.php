@@ -74,7 +74,7 @@
                         <span>Total Belanja</span>
                         <span id="summary-total">Rp <?= number_format($total, 0, ',', '.') ?></span>
                     </div>
-                    <form action="<?= base_url('pelanggan/checkout') ?>" method="POST">
+                    <form action="<?= base_url('pelanggan/checkoutp') ?>" method="POST">
                         <input type="hidden" name="csrf_token" value="<?= csrf_hash() ?>">
                         <?php foreach ($cart_items as $item): ?>
                             <input type="hidden" name="cart_items[<?= $item['id_barang'] ?>][id_barang]" value="<?= $item['id_barang'] ?>">
